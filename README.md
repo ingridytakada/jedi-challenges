@@ -4,9 +4,6 @@
 
 A cyberpunk-themed collection of AI coding challenges designed to test and showcase advanced artificial intelligence and multi-agent system development skills.
 
-[![Live Site](https://img.shields.io/badge/🌐_Live_Site-cloudwalk--jedi--challenges.vercel.app-00ff41?style=for-the-badge)](https://cloudwalk-jedi-challenges.vercel.app/)
-[![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github)](https://github.com/ingridytakada/jedi-challenges)
-
 ## 🎯 Overview
 
 This project presents **9 progressive AI challenges** across 3 difficulty levels, from beginner-friendly chatbots to hardcore AI research projects like decoding the mysterious Voynich Manuscript.
@@ -150,22 +147,6 @@ window.va('track', 'Custom Event Name', {
     additional: data
 });
 ```
-
-## 🤝 Contributing
-
-This project serves as a recruitment tool for CloudWalk. For contributions or questions:
-
-**Contact**: [nimbus@cloudwalk.io](mailto:nimbus@cloudwalk.io)
-
-### 🌟 Candidate Instructions
-1. **Choose ONE challenge** that matches your interests and skills
-2. **Set your own deadline** - self-managed timeline
-3. **Build with quality** - clean, documented, professional code
-4. **Submit via email** - send your solution to the contact above
-
-## 📝 License
-
-This project is created for CloudWalk recruitment purposes. All rights reserved.
 
 ---
 
