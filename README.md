@@ -36,7 +36,7 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 - **Frontend**: Pure HTML5, CSS3, JavaScript (ES6+)
 - **Styling**: Custom CSS with cyberpunk theme, Matrix rain effect
 - **Fonts**: Space Mono (monospace, terminal aesthetic)
-- **Analytics**: Vercel Analytics with custom event tracking
+- **Analytics**: Dual system - GA4 + N8N Webhook for advanced automation
 - **Deployment**: Vercel with automatic GitHub integration
 - **Version Control**: Git with semantic commit messages
 
@@ -51,7 +51,8 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 ### 📊 Analytics & Tracking
 - **Challenge Interest**: Track which challenges candidates expand
 - **Engagement Metrics**: Monitor hover interactions and time spent
-- **Real-time Data**: Vercel Analytics dashboard integration
+- **Google Analytics 4**: Real-time tracking with custom events
+- **N8N Webhook**: Advanced automation and real-time processing
 - **Event Categories**: Separate tracking for expand, collapse, and hover events
 
 ### 🎯 User Experience
@@ -59,6 +60,47 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 - **Visual Hierarchy**: Clear level progression and difficulty indication
 - **Responsive Layout**: Mobile-first design with desktop enhancements
 - **Accessibility**: Semantic HTML and keyboard navigation support
+
+## 🔗 N8N Webhook Analytics
+
+### 🎯 Sistema Avançado de Analytics
+O site possui integração com webhook N8N para automação e análise avançada:
+
+- **Eventos Estruturados**: Dados JSON detalhados para cada interação
+- **Retry Automático**: Sistema de tentativas com fallback offline
+- **Session Tracking**: Acompanha comportamento por sessão
+- **Processamento em Tempo Real**: Automação instantânea no N8N
+
+### 📊 Tipos de Eventos Enviados
+- `page_view`: Visita à página
+- `challenge_expanded`: Challenge expandido (evento mais importante)
+- `challenge_hover`: Mouse sobre challenge
+- `challenge_time_spent`: Tempo gasto em challenge específico
+- `scroll_depth`: Profundidade de scroll (25%, 50%, 75%, 90%, 100%)
+- `time_on_page`: Marcos de tempo (30s, 60s, 2min, 5min)
+- `page_exit`: Saída da página com métricas finais
+
+### ⚙️ Configuração Rápida
+1. **Configure URL do webhook** no `index.html`:
+```javascript
+const WEBHOOK_CONFIG = {
+    url: 'https://sua-instancia-n8n.com/webhook/jedi-challenges',
+    enabled: true,
+    retryAttempts: 3,
+    retryDelay: 1000
+};
+```
+
+2. **Importe o workflow** do arquivo `n8n-workflow-example.json`
+3. **Configure integrações** (Google Sheets, Slack, etc.)
+
+### 🎯 Casos de Uso
+- **Lead Scoring**: Pontuação automática baseada em engagement
+- **Notificações em Tempo Real**: Alertas quando usuários interagem com challenges avançados
+- **Analytics Avançadas**: Integração com Google Sheets, CRM, etc.
+- **Automação de Marketing**: Triggers baseados em comportamento
+
+📋 **Documentação Completa**: Ver `N8N_WEBHOOK_SETUP.md`
 
 ## 🚀 Quick Start
 
@@ -89,6 +131,8 @@ This project is automatically deployed to Vercel:
 jedi-challenges/
 ├── index.html                    # Main site with all challenges
 ├── clouwalk-jedi-challeges.md   # Original challenge documentation
+├── N8N_WEBHOOK_SETUP.md         # N8N webhook configuration guide
+├── n8n-workflow-example.json    # Ready-to-import N8N workflow
 ├── .gitignore                   # Git ignore patterns
 └── README.md                    # This file
 ```
@@ -101,21 +145,28 @@ jedi-challenges/
 
 ## 📈 Analytics Dashboard
 
-Monitor candidate engagement through Vercel Analytics:
+### 📊 Google Analytics 4
+Monitor candidate engagement through GA4:
 
-1. **Visit**: [Vercel Dashboard](https://vercel.com/dashboard)
-2. **Select**: `jedi-challenges` project
-3. **Navigate**: Analytics → Custom Events
-4. **Filter**: By event names:
-   - `Challenge Expanded` - Main interest metric
-   - `Challenge Collapsed` - Completion tracking
-   - `Challenge Hover` - Passive engagement
+1. **Configure GA4 ID** in `index.html`
+2. **Access Dashboard**: Google Analytics 4 interface
+3. **Custom Events**: Track challenge interactions
+4. **Real-time Data**: Monitor live user behavior
+
+### 🤖 N8N Automation
+Advanced analytics and automation:
+
+1. **Real-time Processing**: Events processed instantly
+2. **Custom Workflows**: Automated responses to user behavior
+3. **Integrations**: Google Sheets, Slack, CRM systems
+4. **Lead Scoring**: Automatic scoring based on engagement
 
 ### 📊 Key Metrics
 - **Most Popular Challenges**: Track expansion counts by challenge
 - **Difficulty Preference**: Compare engagement across levels
 - **User Journey**: Analyze hover → expand → collapse patterns
-- **Geographic Data**: See where candidates are located
+- **Engagement Depth**: Time spent and scroll behavior
+- **Session Analytics**: Multi-visit behavior tracking
 
 ## 🎨 Design Philosophy
 
@@ -141,11 +192,29 @@ Monitor candidate engagement through Vercel Analytics:
 
 ### Modifying Analytics
 ```javascript
-// Track custom events
-window.va('track', 'Custom Event Name', {
-    challenge: challengeName,
+// GA4 custom events
+gtag('event', 'custom_event', {
+    'challenge_name': challengeName,
+    'additional': data
+});
+
+// N8N webhook events
+sendEventToN8N({
+    event_type: 'custom_event',
+    challenge_name: challengeName,
     additional: data
 });
+```
+
+### Configuring N8N Webhook
+```javascript
+// Update webhook configuration
+const WEBHOOK_CONFIG = {
+    url: 'https://your-n8n-instance.com/webhook/jedi-challenges',
+    enabled: true,
+    retryAttempts: 3,
+    retryDelay: 1000
+};
 ```
 
 ---

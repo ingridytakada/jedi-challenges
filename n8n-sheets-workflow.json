@@ -1,0 +1,140 @@
+{
+  "name": "Jedi Challenges → Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "973d5b3f-1952-42c2-8de7-671ae0906f24",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Evento recebido e salvo!\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\"\n}"
+      },
+      "id": "webhook_response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar dados do evento para Google Sheets\nconst eventData = $input.first().json;\n\n// Dados básicos sempre presentes\nconst processedData = {\n  timestamp: eventData.timestamp || new Date().toISOString(),\n  event_type: eventData.event_type || 'unknown',\n  challenge_name: eventData.challenge_name || '',\n  challenge_title: eventData.challenge_title || '',\n  challenge_level: eventData.challenge_level || '',\n  user_engagement: eventData.user_engagement || '',\n  session_id: eventData.sessionId || '',\n  time_spent_seconds: eventData.time_spent_seconds || 0,\n  user_agent: eventData.userAgent || '',\n  url: eventData.url || '',\n  \n  // Dados adicionais baseados no tipo de evento\n  scroll_depth: eventData.scroll_depth || 0,\n  max_scroll_depth: eventData.max_scroll_depth || 0,\n  milestone: eventData.milestone || 0,\n  \n  // Metadados\n  processed_at: new Date().toISOString(),\n  referrer: eventData.referrer || ''\n};\n\n// Log para debug\nconsole.log('Processando evento:', processedData.event_type);\nconsole.log('Challenge:', processedData.challenge_name);\nconsole.log('Engagement:', processedData.user_engagement);\n\nreturn processedData;"
+      },
+      "id": "process_data",
+      "name": "Process Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": "SEU_GOOGLE_SHEETS_ID_AQUI",
+        "sheetName": "Challenge_Events",
+        "options": {}
+      },
+      "id": "save_to_sheets",
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "high_engagement",
+              "leftValue": "={{ $json.user_engagement }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "very_high_engagement",
+              "leftValue": "={{ $json.user_engagement }}",
+              "rightValue": "very_high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "filter_high_engagement",
+      "name": "Filter High Engagement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "content": "🎯 **Evento de Alto Engajamento Detectado!**\n\n**Evento:** {{ $json.event_type }}\n**Challenge:** {{ $json.challenge_title }}\n**Nível:** {{ $json.challenge_level }}\n**Engajamento:** {{ $json.user_engagement }}\n**Horário:** {{ $json.timestamp }}\n**Sessão:** {{ $json.session_id }}\n\n*Talvez seja uma boa oportunidade para entrar em contato!* 📞",
+        "options": {}
+      },
+      "id": "notification_message",
+      "name": "Notification Message",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1340, 200]
+    }
+  ],
+  "connections": {
+    "webhook": {
+      "main": [
+        [
+          {
+            "node": "webhook_response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "process_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "process_data": {
+      "main": [
+        [
+          {
+            "node": "save_to_sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "filter_high_engagement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+} 

@@ -711,11 +711,287 @@
         </div>
     </div>
 
-    <!-- Vercel Analytics -->
+    <!-- Google Analytics 4 -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
     <script>
-        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX'); // Substitua pelo seu GA4 ID
     </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+
+    <script>
+        // Configuração do Webhook para N8N
+        const WEBHOOK_CONFIG = {
+            url: 'https://cloudwalk-growth.app.n8n.cloud/webhook/973d5b3f-1952-42c2-8de7-671ae0906f24', // Production URL do webhook N8N
+            enabled: true,
+            retryAttempts: 3,
+            retryDelay: 1000 // 1 segundo
+        };
+
+        // Função para enviar eventos para o webhook N8N
+        async function sendEventToN8N(eventData) {
+            if (!WEBHOOK_CONFIG.enabled || !WEBHOOK_CONFIG.url) {
+                console.log('Webhook N8N desabilitado ou URL não configurada');
+                return;
+            }
+
+            const payload = {
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                url: window.location.href,
+                referrer: document.referrer,
+                sessionId: getSessionId(),
+                ...eventData
+            };
+
+            let attempts = 0;
+            const maxAttempts = WEBHOOK_CONFIG.retryAttempts;
+
+            while (attempts < maxAttempts) {
+                try {
+                    const response = await fetch(WEBHOOK_CONFIG.url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        console.log('Evento enviado com sucesso para N8N:', eventData);
+                        return;
+                    } else {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                } catch (error) {
+                    attempts++;
+                    console.warn(`Tentativa ${attempts} falhou ao enviar evento para N8N:`, error);
+                    
+                    if (attempts < maxAttempts) {
+                        await new Promise(resolve => setTimeout(resolve, WEBHOOK_CONFIG.retryDelay * attempts));
+                    } else {
+                        console.error('Falha ao enviar evento para N8N após todas as tentativas:', error);
+                        // Armazenar evento offline para reenvio posterior
+                        storeOfflineEvent(payload);
+                    }
+                }
+            }
+        }
+
+        // Função para gerar/recuperar session ID
+        function getSessionId() {
+            let sessionId = sessionStorage.getItem('jedi_session_id');
+            if (!sessionId) {
+                sessionId = 'jedi_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                sessionStorage.setItem('jedi_session_id', sessionId);
+            }
+            return sessionId;
+        }
+
+        // Função para armazenar eventos offline
+        function storeOfflineEvent(eventData) {
+            try {
+                const offlineEvents = JSON.parse(localStorage.getItem('jedi_offline_events') || '[]');
+                offlineEvents.push(eventData);
+                // Manter apenas os últimos 50 eventos offline
+                const recentEvents = offlineEvents.slice(-50);
+                localStorage.setItem('jedi_offline_events', JSON.stringify(recentEvents));
+            } catch (error) {
+                console.error('Erro ao armazenar evento offline:', error);
+            }
+        }
+
+        // Função para reenviar eventos offline
+        async function retryOfflineEvents() {
+            try {
+                const offlineEvents = JSON.parse(localStorage.getItem('jedi_offline_events') || '[]');
+                if (offlineEvents.length === 0) return;
+
+                const successfulEvents = [];
+                for (const event of offlineEvents) {
+                    try {
+                        const response = await fetch(WEBHOOK_CONFIG.url, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(event)
+                        });
+
+                        if (response.ok) {
+                            successfulEvents.push(event);
+                        }
+                    } catch (error) {
+                        console.warn('Erro ao reenviar evento offline:', error);
+                    }
+                }
+
+                // Remover eventos enviados com sucesso
+                const remainingEvents = offlineEvents.filter(event => !successfulEvents.includes(event));
+                localStorage.setItem('jedi_offline_events', JSON.stringify(remainingEvents));
+                
+                if (successfulEvents.length > 0) {
+                    console.log(`${successfulEvents.length} eventos offline reenviados com sucesso`);
+                }
+            } catch (error) {
+                console.error('Erro ao reenviar eventos offline:', error);
+            }
+        }
+
+        // Tentar reenviar eventos offline quando a página carregar
+        window.addEventListener('load', () => {
+            setTimeout(retryOfflineEvents, 2000);
+        });
+
+        // Função para rastrear evento de página visitada
+        function trackPageView() {
+            const eventData = {
+                event_type: 'page_view',
+                page_title: document.title,
+                page_path: window.location.pathname,
+                page_search: window.location.search,
+                page_hash: window.location.hash
+            };
+
+            // Enviar para N8N
+            sendEventToN8N(eventData);
+
+            // Enviar para GA4 (se disponível)
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'page_view', {
+                    page_title: eventData.page_title,
+                    page_location: window.location.href,
+                    page_path: eventData.page_path
+                });
+            }
+        }
+
+        // Rastrear visita da página
+        document.addEventListener('DOMContentLoaded', trackPageView);
+
+        // Rastrear scroll depth
+        let maxScrollDepth = 0;
+        let scrollDepthReported = {};
+        
+        function trackScrollDepth() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollDepth = Math.round((scrollTop / documentHeight) * 100);
+            
+            if (scrollDepth > maxScrollDepth) {
+                maxScrollDepth = scrollDepth;
+                
+                // Reportar marcos de scroll (25%, 50%, 75%, 90%, 100%)
+                const milestones = [25, 50, 75, 90, 100];
+                milestones.forEach(milestone => {
+                    if (scrollDepth >= milestone && !scrollDepthReported[milestone]) {
+                        scrollDepthReported[milestone] = true;
+                        
+                        const eventData = {
+                            event_type: 'scroll_depth',
+                            scroll_depth: milestone,
+                            max_scroll_depth: maxScrollDepth,
+                            user_engagement: milestone >= 75 ? 'high' : milestone >= 50 ? 'medium' : 'low'
+                        };
+                        
+                        sendEventToN8N(eventData);
+                        
+                        // Enviar para GA4
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'scroll', {
+                                'scroll_depth': milestone
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        // Debounce para o scroll
+        let scrollTimer;
+        window.addEventListener('scroll', function() {
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(trackScrollDepth, 100);
+        });
+
+        // Rastrear tempo na página
+        let pageStartTime = Date.now();
+        let timeSpentReported = {};
+        
+        function trackTimeSpent() {
+            const timeSpent = Date.now() - pageStartTime;
+            const timeSpentSeconds = Math.round(timeSpent / 1000);
+            
+            // Reportar marcos de tempo (30s, 60s, 2min, 5min)
+            const milestones = [30, 60, 120, 300];
+            milestones.forEach(milestone => {
+                if (timeSpentSeconds >= milestone && !timeSpentReported[milestone]) {
+                    timeSpentReported[milestone] = true;
+                    
+                    const eventData = {
+                        event_type: 'time_on_page',
+                        time_spent_seconds: timeSpentSeconds,
+                        time_spent_minutes: Math.round(timeSpentSeconds / 60),
+                        milestone: milestone,
+                        user_engagement: timeSpentSeconds >= 300 ? 'very_high' : timeSpentSeconds >= 120 ? 'high' : timeSpentSeconds >= 60 ? 'medium' : 'low'
+                    };
+                    
+                    sendEventToN8N(eventData);
+                }
+            });
+        }
+
+        // Verificar tempo na página a cada 10 segundos
+        setInterval(trackTimeSpent, 10000);
+
+        // Rastrear saída da página
+        function trackPageExit() {
+            const totalTimeSpent = Date.now() - pageStartTime;
+            
+            const eventData = {
+                event_type: 'page_exit',
+                total_time_spent_seconds: Math.round(totalTimeSpent / 1000),
+                total_time_spent_minutes: Math.round(totalTimeSpent / 60000),
+                max_scroll_depth: maxScrollDepth,
+                user_engagement: totalTimeSpent >= 300000 ? 'very_high' : totalTimeSpent >= 120000 ? 'high' : totalTimeSpent >= 60000 ? 'medium' : 'low'
+            };
+            
+            // Usar sendBeacon para garantir que o evento seja enviado mesmo se a página estiver fechando
+            if (navigator.sendBeacon && WEBHOOK_CONFIG.enabled && WEBHOOK_CONFIG.url) {
+                const payload = {
+                    timestamp: new Date().toISOString(),
+                    userAgent: navigator.userAgent,
+                    url: window.location.href,
+                    referrer: document.referrer,
+                    sessionId: getSessionId(),
+                    ...eventData
+                };
+                
+                navigator.sendBeacon(WEBHOOK_CONFIG.url, JSON.stringify(payload));
+            } else {
+                // Fallback para fetch síncrono
+                sendEventToN8N(eventData);
+            }
+        }
+
+        // Eventos de saída da página
+        window.addEventListener('beforeunload', trackPageExit);
+        window.addEventListener('pagehide', trackPageExit);
+
+        // Rastrear visibilidade da página
+        document.addEventListener('visibilitychange', function() {
+            const eventData = {
+                event_type: 'page_visibility_change',
+                visibility_state: document.visibilityState,
+                is_visible: !document.hidden,
+                time_since_load: Date.now() - pageStartTime
+            };
+            
+            sendEventToN8N(eventData);
+        });
+
+    </script>
 
     <script>
         // Matrix rain effect
@@ -788,6 +1064,7 @@
                 challenge.addEventListener('click', function() {
                     const challengeName = this.getAttribute('data-challenge');
                     const challengeTitle = this.querySelector('.challenge-title').textContent.trim();
+                    const challengeLevel = this.closest('.level').querySelector('.level-title').textContent.trim();
                     const details = this.querySelector('.challenge-details');
                     
                     // Toggle expanded state
@@ -798,12 +1075,25 @@
                         this.classList.remove('expanded');
                         details.classList.remove('expanded');
                         
-                        // Track collapse
-                        if (window.va) {
-                            window.va('track', 'Challenge Collapsed', {
-                                challenge: challengeName,
-                                title: challengeTitle,
-                                level: this.closest('.level').querySelector('.level-title').textContent.trim()
+                        // Dados do evento para N8N
+                        const eventData = {
+                            event_type: 'challenge_collapsed',
+                            challenge_name: challengeName,
+                            challenge_title: challengeTitle,
+                            challenge_level: challengeLevel,
+                            interaction_type: 'click',
+                            user_engagement: 'low'
+                        };
+                        
+                        // Enviar para N8N
+                        sendEventToN8N(eventData);
+                        
+                        // Track collapse with GA4
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'challenge_collapsed', {
+                                'challenge_name': challengeName,
+                                'challenge_title': challengeTitle,
+                                'challenge_level': challengeLevel
                             });
                         }
                     } else {
@@ -811,12 +1101,26 @@
                         this.classList.add('expanded');
                         details.classList.add('expanded');
                         
-                        // Track expansion (main interest metric)
-                        if (window.va) {
-                            window.va('track', 'Challenge Expanded', {
-                                challenge: challengeName,
-                                title: challengeTitle,
-                                level: this.closest('.level').querySelector('.level-title').textContent.trim()
+                        // Dados do evento para N8N (expansão é mais importante)
+                        const eventData = {
+                            event_type: 'challenge_expanded',
+                            challenge_name: challengeName,
+                            challenge_title: challengeTitle,
+                            challenge_level: challengeLevel,
+                            interaction_type: 'click',
+                            user_engagement: 'high',
+                            challenge_summary: this.querySelector('.challenge-summary').textContent.trim()
+                        };
+                        
+                        // Enviar para N8N
+                        sendEventToN8N(eventData);
+                        
+                        // Track expansion (main interest metric) with GA4
+                        if (typeof gtag !== 'undefined') {
+                            gtag('event', 'challenge_expanded', {
+                                'challenge_name': challengeName,
+                                'challenge_title': challengeTitle,
+                                'challenge_level': challengeLevel
                             });
                         }
                         
@@ -836,11 +1140,62 @@
                 // Track hover for engagement
                 challenge.addEventListener('mouseenter', function() {
                     const challengeName = this.getAttribute('data-challenge');
+                    const challengeTitle = this.querySelector('.challenge-title').textContent.trim();
+                    const challengeLevel = this.closest('.level').querySelector('.level-title').textContent.trim();
                     
-                    if (window.va) {
-                        window.va('track', 'Challenge Hover', {
-                            challenge: challengeName
+                    // Dados do evento para N8N
+                    const eventData = {
+                        event_type: 'challenge_hover',
+                        challenge_name: challengeName,
+                        challenge_title: challengeTitle,
+                        challenge_level: challengeLevel,
+                        interaction_type: 'hover',
+                        user_engagement: 'medium'
+                    };
+                    
+                    // Enviar para N8N
+                    sendEventToN8N(eventData);
+                    
+                    // Track hover with GA4
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'challenge_hover', {
+                            'challenge_name': challengeName,
+                            'challenge_title': challengeTitle,
+                            'challenge_level': challengeLevel
                         });
+                    }
+                });
+
+                // Track tempo de permanência na página expandida
+                challenge.addEventListener('click', function() {
+                    const challengeName = this.getAttribute('data-challenge');
+                    const isExpanded = this.classList.contains('expanded');
+                    
+                    if (!isExpanded) { // Está expandindo agora
+                        const startTime = Date.now();
+                        this.setAttribute('data-expand-time', startTime);
+                    } else { // Está colapsando agora
+                        const startTime = this.getAttribute('data-expand-time');
+                        if (startTime) {
+                            const timeSpent = Date.now() - parseInt(startTime);
+                            
+                            // Enviar evento de tempo gasto apenas se foi mais de 2 segundos
+                            if (timeSpent > 2000) {
+                                const eventData = {
+                                    event_type: 'challenge_time_spent',
+                                    challenge_name: challengeName,
+                                    challenge_title: this.querySelector('.challenge-title').textContent.trim(),
+                                    challenge_level: this.closest('.level').querySelector('.level-title').textContent.trim(),
+                                    time_spent_ms: timeSpent,
+                                    time_spent_seconds: Math.round(timeSpent / 1000),
+                                    user_engagement: timeSpent > 30000 ? 'very_high' : timeSpent > 10000 ? 'high' : 'medium'
+                                };
+                                
+                                sendEventToN8N(eventData);
+                            }
+                            
+                            this.removeAttribute('data-expand-time');
+                        }
                     }
                 });
             });

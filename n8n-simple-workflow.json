@@ -1,0 +1,94 @@
+{
+  "name": "Jedi Challenges - Simple Test",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "webhook-test/25be1cf4-d0a6-4313-af65-a2b6931efae0",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\n  \"status\": \"success\",\n  \"message\": \"Evento recebido com sucesso!\",\n  \"timestamp\": \"{{ new Date().toISOString() }}\"\n}"
+      },
+      "id": "webhook_response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "id": "merge",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log dos eventos recebidos\nconst eventData = $input.first().json;\n\nconsole.log('=== EVENTO RECEBIDO ===');\nconsole.log('Tipo:', eventData.event_type);\nconsole.log('Timestamp:', eventData.timestamp);\nconsole.log('Session ID:', eventData.sessionId);\n\nif (eventData.challenge_name) {\n  console.log('Challenge:', eventData.challenge_name);\n  console.log('Challenge Title:', eventData.challenge_title);\n  console.log('Challenge Level:', eventData.challenge_level);\n}\n\nif (eventData.user_engagement) {\n  console.log('User Engagement:', eventData.user_engagement);\n}\n\nconsole.log('=== FIM DO EVENTO ===');\n\n// Retornar os dados para próximos nós\nreturn {\n  received_at: new Date().toISOString(),\n  event_type: eventData.event_type,\n  challenge_name: eventData.challenge_name || 'N/A',\n  user_engagement: eventData.user_engagement || 'N/A',\n  session_id: eventData.sessionId,\n  processed: true\n};"
+      },
+      "id": "log_event",
+      "name": "Log Event",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [900, 300]
+    }
+  ],
+  "connections": {
+    "webhook": {
+      "main": [
+        [
+          {
+            "node": "webhook_response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "webhook_response": {
+      "main": [
+        [
+          {
+            "node": "merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "merge": {
+      "main": [
+        [
+          {
+            "node": "log_event",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+} 

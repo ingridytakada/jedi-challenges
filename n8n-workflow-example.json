@@ -1,0 +1,351 @@
+{
+  "name": "Jedi Challenges Analytics",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "jedi-challenges",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        240,
+        300
+      ],
+      "webhookId": "jedi-challenges-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "challenge_expanded",
+              "leftValue": "={{ $json.event_type }}",
+              "rightValue": "challenge_expanded",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter_challenge_expanded",
+      "name": "Filter Challenge Expanded",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "high_engagement",
+              "leftValue": "={{ $json.user_engagement }}",
+              "rightValue": "high",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter_high_engagement",
+      "name": "Filter High Engagement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        460,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar eventos de challenge expandido\nconst challengeData = {\n  timestamp: $input.first().json.timestamp,\n  challenge_name: $input.first().json.challenge_name,\n  challenge_title: $input.first().json.challenge_title,\n  challenge_level: $input.first().json.challenge_level,\n  session_id: $input.first().json.sessionId,\n  user_agent: $input.first().json.userAgent,\n  url: $input.first().json.url,\n  event_type: 'challenge_expanded',\n  processed_at: new Date().toISOString()\n};\n\n// Determinar popularidade baseado no challenge\nconst popularityScore = {\n  'cloudwalk-chatbot': 1,\n  'find-video-source': 1,\n  'self-driven-game-platform': 2,\n  'self-driven-newsletter': 2,\n  'self-driven-music-generator': 2,\n  'self-driven-ebook-generator': 2,\n  'kaggle-slaying-multi-agent': 3,\n  'ml-pool-estimation-sao-paulo': 3,\n  'voynich-manuscript-decoder': 3\n};\n\nchallengeData.difficulty_level = popularityScore[challengeData.challenge_name] || 1;\nchallengeData.is_advanced = challengeData.difficulty_level >= 3;\n\nreturn challengeData;"
+      },
+      "id": "process_challenge_data",
+      "name": "Process Challenge Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Processar eventos de alto engajamento\nconst engagementData = {\n  timestamp: $input.first().json.timestamp,\n  session_id: $input.first().json.sessionId,\n  event_type: $input.first().json.event_type,\n  user_engagement: $input.first().json.user_engagement,\n  url: $input.first().json.url,\n  processed_at: new Date().toISOString()\n};\n\n// Adicionar dados específicos baseado no tipo de evento\nswitch($input.first().json.event_type) {\n  case 'scroll_depth':\n    engagementData.scroll_depth = $input.first().json.scroll_depth;\n    engagementData.max_scroll_depth = $input.first().json.max_scroll_depth;\n    break;\n  case 'time_on_page':\n    engagementData.time_spent_seconds = $input.first().json.time_spent_seconds;\n    engagementData.milestone = $input.first().json.milestone;\n    break;\n  case 'challenge_time_spent':\n    engagementData.challenge_name = $input.first().json.challenge_name;\n    engagementData.time_spent_seconds = $input.first().json.time_spent_seconds;\n    break;\n}\n\nreturn engagementData;"
+      },
+      "id": "process_engagement_data",
+      "name": "Process Engagement Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": "YOUR_GOOGLE_SHEETS_ID",
+        "sheetName": "Challenge_Analytics",
+        "columnToMatchOn": "timestamp",
+        "options": {}
+      },
+      "id": "save_to_sheets_challenges",
+      "name": "Save to Google Sheets - Challenges",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        900,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": "YOUR_GOOGLE_SHEETS_ID",
+        "sheetName": "Engagement_Analytics",
+        "columnToMatchOn": "timestamp",
+        "options": {}
+      },
+      "id": "save_to_sheets_engagement",
+      "name": "Save to Google Sheets - Engagement",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        900,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "advanced_challenge",
+              "leftValue": "={{ $json.is_advanced }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter_advanced_challenges",
+      "name": "Filter Advanced Challenges",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1120,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "channel": "#jedi-challenges",
+        "text": "🚀 *Alguém está interessado em um challenge avançado!*\n\n*Challenge:* {{ $json.challenge_title }}\n*Nível:* {{ $json.challenge_level }}\n*Horário:* {{ $json.timestamp }}\n\nTalvez seja um bom momento para entrar em contato! 🎯",
+        "otherOptions": {}
+      },
+      "id": "slack_notification",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1340,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "text",
+        "responseBody": "success"
+      },
+      "id": "webhook_response",
+      "name": "Webhook Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [
+        460,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Contador de eventos por sessão\nconst sessionId = $input.first().json.sessionId;\nconst eventType = $input.first().json.event_type;\n\n// Usar workflow static data para persistir contadores\nconst staticData = getWorkflowStaticData('global');\n\nif (!staticData.sessionCounts) {\n  staticData.sessionCounts = {};\n}\n\nif (!staticData.sessionCounts[sessionId]) {\n  staticData.sessionCounts[sessionId] = {\n    first_seen: new Date().toISOString(),\n    events: {},\n    total_events: 0\n  };\n}\n\nif (!staticData.sessionCounts[sessionId].events[eventType]) {\n  staticData.sessionCounts[sessionId].events[eventType] = 0;\n}\n\nstaticData.sessionCounts[sessionId].events[eventType]++;\nstaticData.sessionCounts[sessionId].total_events++;\nstaticData.sessionCounts[sessionId].last_seen = new Date().toISOString();\n\n// Limpar dados antigos (mais de 24 horas)\nconst oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);\nfor (const [session, data] of Object.entries(staticData.sessionCounts)) {\n  if (new Date(data.last_seen) < oneDayAgo) {\n    delete staticData.sessionCounts[session];\n  }\n}\n\nreturn {\n  ...($input.first().json),\n  session_stats: staticData.sessionCounts[sessionId],\n  total_active_sessions: Object.keys(staticData.sessionCounts).length\n};"
+      },
+      "id": "session_counter",
+      "name": "Session Counter",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        680,
+        600
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "sheet",
+        "operation": "appendOrUpdate",
+        "documentId": "YOUR_GOOGLE_SHEETS_ID",
+        "sheetName": "Session_Analytics",
+        "columnToMatchOn": "sessionId",
+        "options": {}
+      },
+      "id": "save_session_data",
+      "name": "Save Session Data",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        900,
+        600
+      ]
+    }
+  ],
+  "connections": {
+    "webhook": {
+      "main": [
+        [
+          {
+            "node": "filter_challenge_expanded",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "filter_high_engagement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "webhook_response",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "session_counter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_challenge_expanded": {
+      "main": [
+        [
+          {
+            "node": "process_challenge_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_high_engagement": {
+      "main": [
+        [
+          {
+            "node": "process_engagement_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "process_challenge_data": {
+      "main": [
+        [
+          {
+            "node": "save_to_sheets_challenges",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "filter_advanced_challenges",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "process_engagement_data": {
+      "main": [
+        [
+          {
+            "node": "save_to_sheets_engagement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "filter_advanced_challenges": {
+      "main": [
+        [
+          {
+            "node": "slack_notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "session_counter": {
+      "main": [
+        [
+          {
+            "node": "save_session_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {},
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2024-01-15T10:00:00.000Z",
+  "versionId": "1"
+} 
