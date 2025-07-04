@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudWalk AI Jedi Challenges</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 10mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            font-size: 7px;
+            line-height: 1.2;
+            color: #00ff41;
+            background: #000814;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 8px;
+            padding: 6px;
+            background: linear-gradient(45deg, #000814, #14213d);
+            color: #00ff41;
+            border-radius: 3px;
+        }
+
+        .main-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 3px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .subtitle {
+            font-size: 8px;
+            color: #ffbe0b;
+        }
+
+        .container {
+            column-count: 2;
+            column-gap: 12px;
+            column-rule: 1px solid #3a86ff;
+        }
+
+        .level {
+            break-inside: avoid;
+            margin-bottom: 8px;
+        }
+
+        .level-header {
+            background: linear-gradient(45deg, #14213d, #000814);
+            color: #00ff41;
+            padding: 4px 6px;
+            border-radius: 2px;
+            margin-bottom: 3px;
+        }
+
+        .level-title {
+            font-size: 9px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .level-emoji {
+            font-size: 10px;
+        }
+
+        .challenge {
+            margin-bottom: 6px;
+            padding: 4px;
+            border-left: 2px solid #fb5607;
+            background: rgba(58, 134, 255, 0.1);
+            break-inside: avoid;
+        }
+
+        .challenge-title {
+            font-size: 8px;
+            font-weight: bold;
+            color: #ffbe0b;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .challenge-goal {
+            font-size: 7px;
+            margin-bottom: 2px;
+            font-weight: bold;
+            color: #3a86ff;
+        }
+
+        .challenge-details {
+            font-size: 6.5px;
+            margin-bottom: 2px;
+            color: #00ff41;
+        }
+
+        .challenge-details p {
+            margin-bottom: 1px;
+        }
+
+        .challenge-details ul, .challenge-details ol {
+            margin-left: 8px;
+            margin-bottom: 1px;
+        }
+
+        .challenge-details li {
+            margin-bottom: 0px;
+        }
+
+        .code-block {
+            background: #14213d;
+            border: 1px solid #3a86ff;
+            padding: 2px;
+            font-size: 5.5px;
+            border-radius: 1px;
+            margin: 1px 0;
+            font-family: 'Courier New', monospace;
+            color: #00ff41;
+        }
+
+        .requirements {
+            background: rgba(0, 255, 65, 0.15);
+            border-left: 1px solid #00ff41;
+            padding: 2px 3px;
+            margin: 1px 0;
+            font-size: 6px;
+        }
+
+        .requirements h4 {
+            font-size: 6.5px;
+            color: #00ff41;
+            margin-bottom: 1px;
+        }
+
+        .requirements ul {
+            margin-left: 6px;
+        }
+
+        .plus-features {
+            background: rgba(6, 214, 160, 0.15);
+            border-left: 1px solid #06d6a0;
+            padding: 2px 3px;
+            margin: 1px 0;
+            font-size: 6px;
+        }
+
+        .plus-features h4 {
+            font-size: 6.5px;
+            color: #06d6a0;
+            margin-bottom: 1px;
+        }
+
+        .plus-features ul {
+            margin-left: 6px;
+        }
+
+        .footer {
+            column-span: all;
+            text-align: center;
+            margin-top: 8px;
+            padding: 4px;
+            background: #000814;
+            color: #00ff41;
+            border-radius: 2px;
+            font-size: 7px;
+            font-weight: bold;
+        }
+
+        strong {
+            color: #ffbe0b;
+        }
+
+        em {
+            color: #8338ec;
+            font-style: italic;
+        }
+
+        /* Quebras de página estratégicas */
+        .level:first-child {
+            page-break-inside: avoid;
+        }
+
+        .challenge:last-child {
+            page-break-after: avoid;
+        }
+
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .level {
+                page-break-inside: avoid;
+            }
+            
+            .challenge {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="main-title">🧠 CloudWalk AI Jedi Challenges</h1>
+        <p class="subtitle">Choose Your Mission - Complete Challenge Reference</p>
+    </div>
+
+    <div class="container">
+        <!-- Level 1: Padawan -->
+        <div class="level">
+            <div class="level-header">
+                <h2 class="level-title">
+                    <span class="level-emoji">🧑‍🚀</span>
+                    Level 1: Padawan – Light Side
+                </h2>
+            </div>
+            
+            <div class="challenge">
+                <h3 class="challenge-title">💬 CloudWalk Chatbot</h3>
+                <div class="challenge-goal">
+                    <strong>Goal:</strong> Build a chatbot explaining CloudWalk, InfinitePay, mission, and values.
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Input:</strong> User questions via chat interface</p>
+                    <p><strong>Output:</strong> Natural language answers (Markdown/links)</p>
+                </div>
+                <div class="requirements">
+                    <h4>Requirements:</h4>
+                    <ul>
+                        <li>RAG from public sources</li>
+                        <li>3 sample conversations in README</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🔍 Find the Video Source</h3>
+                <div class="challenge-goal">
+                    <strong>Goal:</strong> Find original video from text snippet (book/paper/transcript).
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Input:</strong> Text snippet (plain text)</p>
+                    <p><strong>Output:</strong></p>
+                    <div class="code-block">
+{
+  "video_id": "yt123",
+  "timestamp_start": "00:14:05", 
+  "timestamp_end": "00:14:38"
+}
+                    </div>
+                </div>
+                <div class="requirements">
+                    <h4>Hints:</h4>
+                    <ul>
+                        <li>YouTube transcripts, embeddings + search APIs (Serper, Tavily)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 2: Jedi Knight -->
+        <div class="level">
+            <div class="level-header">
+                <h2 class="level-title">
+                    <span class="level-emoji">🥷</span>
+                    Level 2: Jedi Knight – Multi-Agent
+                </h2>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🎮 Self-Driven Game Platform</h3>
+                <div class="challenge-goal">
+                    <em>"Software writes software." – Unknown Jedi</em><br>
+                    <strong>Goal:</strong> Autonomous company generating/promoting daily games.
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ul>
+                        <li><strong>Game Agent:</strong> Daily JavaScript games</li>
+                        <li><strong>Marketing Agent:</strong> Social media ads</li>
+                        <li><strong>Billing Agent:</strong> $1 access charge</li>
+                    </ul>
+                </div>
+                <div class="requirements">
+                    <h4>Requirements:</h4>
+                    <ul>
+                        <li>CrewAI/AutoGen/LangChain orchestration</li>
+                        <li>Persistent logs/DB</li>
+                        <li>3-day operation unit test</li>
+                    </ul>
+                </div>
+                <div class="plus-features">
+                    <h4>Plus Features:</h4>
+                    <ul>
+                        <li>A/B testing, Global leaderboard, IaC</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">📬 Self-Driven Newsletter</h3>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ul>
+                        <li><strong>Curation Agent:</strong> Trending topics + LLM writing</li>
+                        <li><strong>Billing Agent:</strong> $1/month subscription</li>
+                        <li><strong>Marketing Agent:</strong> Daily promotion</li>
+                    </ul>
+                </div>
+                <div class="plus-features">
+                    <h4>Plus:</h4>
+                    <ul>
+                        <li>User segmentation, Topic voting forms</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🎧 Self-Driven Music Generator</h3>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ul>
+                        <li><strong>Music Agent:</strong> Daily AI music (Suno/Riffusion)</li>
+                        <li><strong>Billing Agent:</strong> $1/month payment</li>
+                        <li><strong>Marketing Agent:</strong> Social media samples</li>
+                    </ul>
+                </div>
+                <div class="plus-features">
+                    <h4>Plus:</h4>
+                    <ul>
+                        <li>Auto playlist builder, Mood-based generation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">📚 Self-Driven Ebook Generator</h3>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ul>
+                        <li><strong>Ebook Agent:</strong> LLM + DALL·E content</li>
+                        <li><strong>Billing Agent:</strong> R$1/month downloads</li>
+                        <li><strong>Marketing Agent:</strong> Ads and previews</li>
+                    </ul>
+                </div>
+                <div class="plus-features">
+                    <h4>Plus:</h4>
+                    <ul>
+                        <li>Topic polls, Telegram bot distribution</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level 3: Jedi Grand Master -->
+        <div class="level">
+            <div class="level-header">
+                <h2 class="level-title">
+                    <span class="level-emoji">🧙‍♂️</span>
+                    Level 3: Grand Master – Hardcore AI
+                </h2>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🤖 Kaggle-Slaying Multi-Agent</h3>
+                <div class="challenge-goal">
+                    <strong>Goal:</strong> Autonomous Kaggle competition team (top 20%).
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong> Data collection, model training, API submissions, leaderboard monitoring</p>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🏊‍♂️ ML Pool Estimation – São Paulo</h3>
+                <div class="challenge-goal">
+                    <strong>Goal:</strong> Estimate swimming pools in São Paulo using ML + satellite images.
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ol>
+                        <li>Sample rooftops (Google Maps/INPE)</li>
+                        <li>Train pool detector (>0.65 mAP)</li>
+                        <li>Statistical extrapolation</li>
+                    </ol>
+                </div>
+                <div class="plus-features">
+                    <h4>Bonus:</h4>
+                    <ul>
+                        <li>Folium density map, District comparison</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="challenge">
+                <h3 class="challenge-title">🧾 Voynich Manuscript Decoder</h3>
+                <div class="challenge-goal">
+                    <em>"The most beautiful thing is the mysterious." – Einstein</em><br>
+                    <strong>Goal:</strong> Decode the world's most mysterious manuscript using AI.
+                </div>
+                <div class="challenge-details">
+                    <p><strong>Tasks:</strong></p>
+                    <ul>
+                        <li>Ingest Voynich text (EVA/Takahashi transcription)</li>
+                        <li>Find patterns using LLMs/embeddings/custom models</li>
+                        <li>Match with known languages/frequencies</li>
+                    </ul>
+                    <p><strong>Input:</strong> voynich_eva.txt, XML/images (Beinecke Library)</p>
+                    <div class="code-block">
+{
+  "section": "Herbal A",
+  "hypothesis": "Plant properties symbolic language",
+  "translation_attempt": {
+    "line_1": "otedy qokeedy qokedy",
+    "meaning": "plant root soak boil"
+  }
+}
+                    </div>
+                </div>
+                <div class="requirements">
+                    <h4>Requirements:</h4>
+                    <ul>
+                        <li>AI reasoning for unknown language exploration</li>
+                        <li>Clear process logs</li>
+                        <li>Approach justification</li>
+                    </ul>
+                </div>
+                <div class="plus-features">
+                    <h4>Bonus Features:</h4>
+                    <ul>
+                        <li>Visual term overlay on manuscript images</li>
+                        <li>Fine-tuned cipher model</li>
+                        <li>Symbol evolution timeline</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Good luck, and may the source be with you! 🚀 | CloudWalk AI Jedi Challenges
+    </div>
+</body>
+</html> 
