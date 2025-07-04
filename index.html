@@ -233,6 +233,22 @@
             box-shadow: 0 2px 8px rgba(0, 255, 65, 0.4);
         }
 
+        .challenge-details {
+            margin-bottom: 15px;
+            display: none;
+            opacity: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .challenge-details.expanded {
+            display: block;
+            opacity: 1;
+            max-height: 1000px;
+            margin-top: 20px;
+        }
+
         .challenge-title {
             font-size: 1.4rem;
             color: var(--secondary-accent);
@@ -240,6 +256,26 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            position: relative;
+        }
+
+        .challenge-title::after {
+            content: '▼';
+            font-size: 12px;
+            color: #00ff41;
+            transition: transform 0.3s ease;
+            margin-left: auto;
+        }
+
+        .challenge.expanded .challenge-title::after {
+            transform: rotate(180deg);
+        }
+
+        .challenge-summary {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-style: italic;
         }
 
         .challenge-goal {
@@ -396,43 +432,49 @@
                     <div class="level-content">
                         <div class="challenge" data-challenge="cloudwalk-chatbot">
                             <h3 class="challenge-title">💬 CloudWalk Chatbot</h3>
-                            <div class="challenge-goal">
-                                <strong>Goal:</strong> Build a chatbot that explains what CloudWalk is, its products (like InfinitePay), mission, and brand values.
-                            </div>
+                            <div class="challenge-summary">Build a chatbot that explains what CloudWalk is, its products, mission, and brand values.</div>
                             <div class="challenge-details">
-                                <p><strong>Input:</strong> User questions via chat interface.</p>
-                                <p><strong>Output:</strong> Natural language answers (optionally Markdown or links).</p>
-                            </div>
-                            <div class="requirements">
-                                <h4>Requirements:</h4>
-                                <ul>
-                                    <li>Retrieval-augmented generation (RAG) from public sources</li>
-                                    <li>3 sample conversations in README</li>
-                                </ul>
+                                <div class="challenge-goal">
+                                    <strong>Goal:</strong> Build a chatbot that explains what CloudWalk is, its products (like InfinitePay), mission, and brand values.
+                                </div>
+                                <div>
+                                    <p><strong>Input:</strong> User questions via chat interface.</p>
+                                    <p><strong>Output:</strong> Natural language answers (optionally Markdown or links).</p>
+                                </div>
+                                <div class="requirements">
+                                    <h4>Requirements:</h4>
+                                    <ul>
+                                        <li>Retrieval-augmented generation (RAG) from public sources</li>
+                                        <li>3 sample conversations in README</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="find-video-source">
                             <h3 class="challenge-title">🔍 Find the Video Source</h3>
-                            <div class="challenge-goal">
-                                <strong>Goal:</strong> Given a snippet of text (from a book, paper, article, or transcript), find the original video where it was spoken.
-                            </div>
+                            <div class="challenge-summary">Given a text snippet, find the original video where it was spoken.</div>
                             <div class="challenge-details">
-                                <p><strong>Input:</strong> Text snippet (plain text).</p>
-                                <p><strong>Output:</strong></p>
-                                <div class="code-block">
+                                <div class="challenge-goal">
+                                    <strong>Goal:</strong> Given a snippet of text (from a book, paper, article, or transcript), find the original video where it was spoken.
+                                </div>
+                                <div>
+                                    <p><strong>Input:</strong> Text snippet (plain text).</p>
+                                    <p><strong>Output:</strong></p>
+                                    <div class="code-block">
 {
   "video_id": "yt123",
   "timestamp_start": "00:14:05",
   "timestamp_end": "00:14:38"
 }
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="requirements">
-                                <h4>Hints:</h4>
-                                <ul>
-                                    <li>Use YouTube transcripts, embeddings + search APIs (Serper, Tavily, etc)</li>
-                                </ul>
+                                <div class="requirements">
+                                    <h4>Hints:</h4>
+                                    <ul>
+                                        <li>Use YouTube transcripts, embeddings + search APIs (Serper, Tavily, etc)</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -449,90 +491,102 @@
                     <div class="level-content">
                         <div class="challenge" data-challenge="self-driven-game-platform">
                             <h3 class="challenge-title">🎮 Self-Driven Game Platform</h3>
-                            <div class="challenge-goal">
-                                <em>"In the future, software writes software." – Unknown Jedi Coder</em><br><br>
-                                <strong>Goal:</strong> Build a fully autonomous company that generates and promotes a new game daily.
-                            </div>
+                            <div class="challenge-summary">Build a fully autonomous company that generates and promotes a new game daily.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li><strong>Game Generator Agent:</strong> Publishes a new JavaScript game every day at one website</li>
-                                    <li><strong>Marketing Agent:</strong> Posts daily ads (Twitter, LinkedIn, Reddit)</li>
-                                    <li><strong>Billing Agent:</strong> Charges $1 for access</li>
-                                </ul>
-                            </div>
-                            <div class="requirements">
-                                <h4>Requirements:</h4>
-                                <ul>
-                                    <li>Agents orchestrated with CrewAI, AutoGen, LangChain, etc</li>
-                                    <li>Persistent logs or DB of actions</li>
-                                    <li>Unit test simulating 3 days of operation</li>
-                                </ul>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Plus Features (Optional):</h4>
-                                <ul>
-                                    <li>A/B testing of ad performance</li>
-                                    <li>Global leaderboard</li>
-                                    <li>Infrastructure as code (Terraform/Pulumi)</li>
-                                </ul>
+                                <div class="challenge-goal">
+                                    <em>"In the future, software writes software." – Unknown Jedi Coder</em><br><br>
+                                    <strong>Goal:</strong> Build a fully autonomous company that generates and promotes a new game daily.
+                                </div>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li><strong>Game Generator Agent:</strong> Publishes a new JavaScript game every day at one website</li>
+                                        <li><strong>Marketing Agent:</strong> Posts daily ads (Twitter, LinkedIn, Reddit)</li>
+                                        <li><strong>Billing Agent:</strong> Charges $1 for access</li>
+                                    </ul>
+                                </div>
+                                <div class="requirements">
+                                    <h4>Requirements:</h4>
+                                    <ul>
+                                        <li>Agents orchestrated with CrewAI, AutoGen, LangChain, etc</li>
+                                        <li>Persistent logs or DB of actions</li>
+                                        <li>Unit test simulating 3 days of operation</li>
+                                    </ul>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Plus Features (Optional):</h4>
+                                    <ul>
+                                        <li>A/B testing of ad performance</li>
+                                        <li>Global leaderboard</li>
+                                        <li>Infrastructure as code (Terraform/Pulumi)</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="self-driven-newsletter">
                             <h3 class="challenge-title">📬 Self-Driven Newsletter Company</h3>
+                            <div class="challenge-summary">Autonomous newsletter company with curation, billing, and marketing agents.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li><strong>Curation Agent:</strong> Picks trending topics and writes newsletters with LLM</li>
-                                    <li><strong>Billing Agent:</strong> Charges $1/month</li>
-                                    <li><strong>Marketing Agent:</strong> Promotes daily via posts or emails</li>
-                                </ul>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Plus Features:</h4>
-                                <ul>
-                                    <li>User segmentation</li>
-                                    <li>Topic voting via embedded forms</li>
-                                </ul>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li><strong>Curation Agent:</strong> Picks trending topics and writes newsletters with LLM</li>
+                                        <li><strong>Billing Agent:</strong> Charges $1/month</li>
+                                        <li><strong>Marketing Agent:</strong> Promotes daily via posts or emails</li>
+                                    </ul>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Plus Features:</h4>
+                                    <ul>
+                                        <li>User segmentation</li>
+                                        <li>Topic voting via embedded forms</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="self-driven-music-generator">
                             <h3 class="challenge-title">🎧 Self-Driven Music Generator Company</h3>
+                            <div class="challenge-summary">Autonomous music generation company with AI music creation, billing, and marketing.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li><strong>Music Agent:</strong> Generates AI music daily (using Suno, Diff-Singer, Riffusion)</li>
-                                    <li><strong>Billing Agent:</strong> Handles monthly payment ($1)</li>
-                                    <li><strong>Marketing Agent:</strong> Posts to social media with samples</li>
-                                </ul>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Plus Features:</h4>
-                                <ul>
-                                    <li>Spotify-like auto playlist builder</li>
-                                    <li>Mood-based music generation</li>
-                                </ul>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li><strong>Music Agent:</strong> Generates AI music daily (using Suno, Diff-Singer, Riffusion)</li>
+                                        <li><strong>Billing Agent:</strong> Handles monthly payment ($1)</li>
+                                        <li><strong>Marketing Agent:</strong> Posts to social media with samples</li>
+                                    </ul>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Plus Features:</h4>
+                                    <ul>
+                                        <li>Spotify-like auto playlist builder</li>
+                                        <li>Mood-based music generation</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="self-driven-ebook-generator">
                             <h3 class="challenge-title">📚 Self-Driven Ebook Generator Company</h3>
+                            <div class="challenge-summary">Autonomous ebook generation company with LLM writing, design, and distribution.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li><strong>Ebook Agent:</strong> Uses LLM + DALL·E to write and design ebooks</li>
-                                    <li><strong>Billing Agent:</strong> Monetizes downloads (R$1/month)</li>
-                                    <li><strong>Marketing Agent:</strong> Generates ads and previews</li>
-                                </ul>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Plus Features:</h4>
-                                <ul>
-                                    <li>Topic selection via poll</li>
-                                    <li>Auto-distribution via Telegram bot</li>
-                                </ul>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li><strong>Ebook Agent:</strong> Uses LLM + DALL·E to write and design ebooks</li>
+                                        <li><strong>Billing Agent:</strong> Monetizes downloads (R$1/month)</li>
+                                        <li><strong>Marketing Agent:</strong> Generates ads and previews</li>
+                                    </ul>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Plus Features:</h4>
+                                    <ul>
+                                        <li>Topic selection via poll</li>
+                                        <li>Auto-distribution via Telegram bot</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -549,58 +603,66 @@
                     <div class="level-content">
                         <div class="challenge" data-challenge="kaggle-slaying-multi-agent">
                             <h3 class="challenge-title">🤖 Kaggle-Slaying Multi-Agent Team</h3>
-                            <div class="challenge-goal">
-                                <strong>Goal:</strong> Build a team of agents that autonomously participate in Kaggle competitions and aim for top 20%.
-                            </div>
+                            <div class="challenge-summary">Build a team of agents that autonomously participate in Kaggle competitions and aim for top 20%.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li>Collect data</li>
-                                    <li>Train models</li>
-                                    <li>Submit solutions via API</li>
-                                    <li>Monitor leaderboard</li>
-                                </ul>
+                                <div class="challenge-goal">
+                                    <strong>Goal:</strong> Build a team of agents that autonomously participate in Kaggle competitions and aim for top 20%.
+                                </div>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li>Collect data</li>
+                                        <li>Train models</li>
+                                        <li>Submit solutions via API</li>
+                                        <li>Monitor leaderboard</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="ml-pool-estimation-sao-paulo">
                             <h3 class="challenge-title">🏊‍♂️ ML Estimation – How Many Pools in São Paulo?</h3>
-                            <div class="challenge-goal">
-                                <strong>Goal:</strong> Estimate the number of swimming pools in São Paulo using ML + satellite images.
-                            </div>
+                            <div class="challenge-summary">Estimate the number of swimming pools in São Paulo using ML + satellite images.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ol>
-                                    <li>Sample rooftops from Google Maps or INPE</li>
-                                    <li>Train a detector (>0.65 mAP) for pools</li>
-                                    <li>Use statistics to extrapolate total count</li>
-                                </ol>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Bonus:</h4>
-                                <ul>
-                                    <li>Folium map with pool density</li>
-                                    <li>District-wise comparison</li>
-                                </ul>
+                                <div class="challenge-goal">
+                                    <strong>Goal:</strong> Estimate the number of swimming pools in São Paulo using ML + satellite images.
+                                </div>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ol>
+                                        <li>Sample rooftops from Google Maps or INPE</li>
+                                        <li>Train a detector (>0.65 mAP) for pools</li>
+                                        <li>Use statistics to extrapolate total count</li>
+                                    </ol>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Bonus:</h4>
+                                    <ul>
+                                        <li>Folium map with pool density</li>
+                                        <li>District-wise comparison</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
 
                         <div class="challenge" data-challenge="voynich-manuscript-decoder">
                             <h3 class="challenge-title">🧾 Voynich Manuscript Decoder Challenge</h3>
-                            <div class="challenge-goal">
-                                <em>"The most beautiful thing we can experience is the mysterious." — Albert Einstein</em><br><br>
-                                <strong>Goal:</strong> Use AI to decode the Voynich Manuscript, one of the most mysterious books in the world, written in an unknown script and language.
-                            </div>
+                            <div class="challenge-summary">Use AI to decode the Voynich Manuscript, one of the most mysterious books in the world.</div>
                             <div class="challenge-details">
-                                <p><strong>Tasks:</strong></p>
-                                <ul>
-                                    <li>Build a pipeline that ingests transcribed Voynich text (EVA or Takahashi transcription)</li>
-                                    <li>Use LLMs, embeddings, or custom models to find patterns, possible meanings, or linguistic structures</li>
-                                    <li>Try to match parts of the text with known languages, glyph frequencies, or hypothesized semantics</li>
-                                </ul>
-                                <p><strong>Input:</strong> Transcription file (e.g., voynich_eva.txt), Optional: XML or images from the Beinecke Library</p>
-                                <p><strong>Output Example:</strong></p>
-                                <div class="code-block">
+                                <div class="challenge-goal">
+                                    <em>"The most beautiful thing we can experience is the mysterious." — Albert Einstein</em><br><br>
+                                    <strong>Goal:</strong> Use AI to decode the Voynich Manuscript, one of the most mysterious books in the world, written in an unknown script and language.
+                                </div>
+                                <div>
+                                    <p><strong>Tasks:</strong></p>
+                                    <ul>
+                                        <li>Build a pipeline that ingests transcribed Voynich text (EVA or Takahashi transcription)</li>
+                                        <li>Use LLMs, embeddings, or custom models to find patterns, possible meanings, or linguistic structures</li>
+                                        <li>Try to match parts of the text with known languages, glyph frequencies, or hypothesized semantics</li>
+                                    </ul>
+                                    <p><strong>Input:</strong> Transcription file (e.g., voynich_eva.txt), Optional: XML or images from the Beinecke Library</p>
+                                    <p><strong>Output Example:</strong></p>
+                                    <div class="code-block">
 {
   "section": "Herbal A",
   "hypothesis": "This section might describe plant properties using a symbolic language.",
@@ -609,23 +671,53 @@
     "meaning": "plant root soak boil"
   }
 }
+                                    </div>
+                                </div>
+                                <div class="requirements">
+                                    <h4>Requirements:</h4>
+                                    <ul>
+                                        <li>Use AI reasoning to explore unknown language or construct hypotheses</li>
+                                        <li>Provide clear logs of your process</li>
+                                        <li>Explain why you believe your approach may uncover meaning</li>
+                                    </ul>
+                                </div>
+                                <div class="plus-features">
+                                    <h4>Bonus Features:</h4>
+                                    <ul>
+                                        <li>Visual overlay of decoded terms on manuscript images</li>
+                                        <li>Model fine-tuned on similar ciphered texts</li>
+                                        <li>Timeline of symbol usage evolution across manuscript pages</li>
+                                    </ul>
                                 </div>
                             </div>
-                            <div class="requirements">
-                                <h4>Requirements:</h4>
-                                <ul>
-                                    <li>Use AI reasoning to explore unknown language or construct hypotheses</li>
-                                    <li>Provide clear logs of your process</li>
-                                    <li>Explain why you believe your approach may uncover meaning</li>
-                                </ul>
-                            </div>
-                            <div class="plus-features">
-                                <h4>Bonus Features:</h4>
-                                <ul>
-                                    <li>Visual overlay of decoded terms on manuscript images</li>
-                                    <li>Model fine-tuned on similar ciphered texts</li>
-                                    <li>Timeline of symbol usage evolution across manuscript pages</li>
-                                </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submission Instructions -->
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-controls">
+                            <span class="control"></span>
+                            <span class="control"></span>
+                            <span class="control"></span>
+                        </div>
+                        <div class="terminal-title">submission-instructions:~$</div>
+                    </div>
+                    <div class="terminal-content">
+                        <h2 style="color: #00ff41; margin-bottom: 20px; font-size: 1.8rem;">📧 How to Submit Your Solution</h2>
+                        <div style="background-color: rgba(0, 255, 65, 0.1); padding: 20px; border-radius: 8px; border-left: 4px solid #00ff41;">
+                            <p style="font-size: 1.1rem; line-height: 1.8; color: var(--text-primary);">
+                                <strong>Interested candidates should:</strong><br><br>
+                                1. <strong>Choose ONE challenge</strong> that resonates with your skills and interests<br>
+                                2. <strong>Set your own deadline</strong> - manage your time as you see fit<br>
+                                3. <strong>Build your solution</strong> with clean, well-documented code<br>
+                                4. <strong>Send your project</strong> to: <a href="mailto:nimbus@cloudwalk.io" style="color: #00ff41; text-decoration: underline;">nimbus@cloudwalk.io</a>
+                            </p>
+                            <div style="margin-top: 20px; padding: 15px; background-color: rgba(0, 0, 0, 0.3); border-radius: 5px;">
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">
+                                    <strong>💡 Pro tip:</strong> Quality over quantity. A well-executed solution to one challenge is better than multiple incomplete attempts.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -707,7 +799,7 @@
 
         setInterval(createParticle, 300);
 
-        // Challenge Interest Tracking
+        // Challenge Expand/Collapse and Analytics
         document.addEventListener('DOMContentLoaded', function() {
             const challenges = document.querySelectorAll('.challenge[data-challenge]');
             
@@ -715,26 +807,49 @@
                 challenge.addEventListener('click', function() {
                     const challengeName = this.getAttribute('data-challenge');
                     const challengeTitle = this.querySelector('.challenge-title').textContent.trim();
+                    const details = this.querySelector('.challenge-details');
                     
-                    // Track with Vercel Analytics
-                    if (window.va) {
-                        window.va('track', 'Challenge Interest', {
-                            challenge: challengeName,
-                            title: challengeTitle,
-                            level: this.closest('.level').querySelector('.level-title').textContent.trim()
-                        });
+                    // Toggle expanded state
+                    const isExpanded = this.classList.contains('expanded');
+                    
+                    if (isExpanded) {
+                        // Collapse
+                        this.classList.remove('expanded');
+                        details.classList.remove('expanded');
+                        
+                        // Track collapse
+                        if (window.va) {
+                            window.va('track', 'Challenge Collapsed', {
+                                challenge: challengeName,
+                                title: challengeTitle,
+                                level: this.closest('.level').querySelector('.level-title').textContent.trim()
+                            });
+                        }
+                    } else {
+                        // Expand
+                        this.classList.add('expanded');
+                        details.classList.add('expanded');
+                        
+                        // Track expansion (main interest metric)
+                        if (window.va) {
+                            window.va('track', 'Challenge Expanded', {
+                                challenge: challengeName,
+                                title: challengeTitle,
+                                level: this.closest('.level').querySelector('.level-title').textContent.trim()
+                            });
+                        }
+                        
+                        // Visual feedback for expansion
+                        this.style.transform = 'translateX(10px)';
+                        this.style.boxShadow = '0 8px 25px rgba(0, 255, 65, 0.4)';
+                        
+                        setTimeout(() => {
+                            this.style.transform = '';
+                            this.style.boxShadow = '';
+                        }, 300);
                     }
                     
-                    // Visual feedback
-                    this.style.transform = 'translateX(15px)';
-                    this.style.boxShadow = '0 8px 25px rgba(0, 255, 65, 0.6)';
-                    
-                    setTimeout(() => {
-                        this.style.transform = '';
-                        this.style.boxShadow = '';
-                    }, 300);
-                    
-                    console.log(`Interest tracked: ${challengeName} - ${challengeTitle}`);
+                    console.log(`Challenge ${isExpanded ? 'collapsed' : 'expanded'}: ${challengeName} - ${challengeTitle}`);
                 });
                 
                 // Track hover for engagement
