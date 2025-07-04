@@ -219,12 +219,18 @@
             border-radius: 6px;
             border-left: 4px solid var(--accent-color);
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .challenge:hover {
             transform: translateX(10px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             border-left-color: #00ff41;
+        }
+
+        .challenge:active {
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 255, 65, 0.4);
         }
 
         .challenge-title {
@@ -388,7 +394,7 @@
                         </h2>
                     </div>
                     <div class="level-content">
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="cloudwalk-chatbot">
                             <h3 class="challenge-title">💬 CloudWalk Chatbot</h3>
                             <div class="challenge-goal">
                                 <strong>Goal:</strong> Build a chatbot that explains what CloudWalk is, its products (like InfinitePay), mission, and brand values.
@@ -406,8 +412,8 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
-                            <h3 class="challenge-title">�� Find the Video Source</h3>
+                        <div class="challenge" data-challenge="find-video-source">
+                            <h3 class="challenge-title">🔍 Find the Video Source</h3>
                             <div class="challenge-goal">
                                 <strong>Goal:</strong> Given a snippet of text (from a book, paper, article, or transcript), find the original video where it was spoken.
                             </div>
@@ -441,7 +447,7 @@
                         </h2>
                     </div>
                     <div class="level-content">
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="self-driven-game-platform">
                             <h3 class="challenge-title">🎮 Self-Driven Game Platform</h3>
                             <div class="challenge-goal">
                                 <em>"In the future, software writes software." – Unknown Jedi Coder</em><br><br>
@@ -473,7 +479,7 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="self-driven-newsletter">
                             <h3 class="challenge-title">📬 Self-Driven Newsletter Company</h3>
                             <div class="challenge-details">
                                 <p><strong>Tasks:</strong></p>
@@ -492,7 +498,7 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="self-driven-music-generator">
                             <h3 class="challenge-title">🎧 Self-Driven Music Generator Company</h3>
                             <div class="challenge-details">
                                 <p><strong>Tasks:</strong></p>
@@ -511,7 +517,7 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="self-driven-ebook-generator">
                             <h3 class="challenge-title">📚 Self-Driven Ebook Generator Company</h3>
                             <div class="challenge-details">
                                 <p><strong>Tasks:</strong></p>
@@ -541,7 +547,7 @@
                         </h2>
                     </div>
                     <div class="level-content">
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="kaggle-slaying-multi-agent">
                             <h3 class="challenge-title">🤖 Kaggle-Slaying Multi-Agent Team</h3>
                             <div class="challenge-goal">
                                 <strong>Goal:</strong> Build a team of agents that autonomously participate in Kaggle competitions and aim for top 20%.
@@ -557,7 +563,7 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="ml-pool-estimation-sao-paulo">
                             <h3 class="challenge-title">🏊‍♂️ ML Estimation – How Many Pools in São Paulo?</h3>
                             <div class="challenge-goal">
                                 <strong>Goal:</strong> Estimate the number of swimming pools in São Paulo using ML + satellite images.
@@ -579,7 +585,7 @@
                             </div>
                         </div>
 
-                        <div class="challenge">
+                        <div class="challenge" data-challenge="voynich-manuscript-decoder">
                             <h3 class="challenge-title">🧾 Voynich Manuscript Decoder Challenge</h3>
                             <div class="challenge-goal">
                                 <em>"The most beautiful thing we can experience is the mysterious." — Albert Einstein</em><br><br>
@@ -700,6 +706,49 @@
         }
 
         setInterval(createParticle, 300);
+
+        // Challenge Interest Tracking
+        document.addEventListener('DOMContentLoaded', function() {
+            const challenges = document.querySelectorAll('.challenge[data-challenge]');
+            
+            challenges.forEach(challenge => {
+                challenge.addEventListener('click', function() {
+                    const challengeName = this.getAttribute('data-challenge');
+                    const challengeTitle = this.querySelector('.challenge-title').textContent.trim();
+                    
+                    // Track with Vercel Analytics
+                    if (window.va) {
+                        window.va('track', 'Challenge Interest', {
+                            challenge: challengeName,
+                            title: challengeTitle,
+                            level: this.closest('.level').querySelector('.level-title').textContent.trim()
+                        });
+                    }
+                    
+                    // Visual feedback
+                    this.style.transform = 'translateX(15px)';
+                    this.style.boxShadow = '0 8px 25px rgba(0, 255, 65, 0.6)';
+                    
+                    setTimeout(() => {
+                        this.style.transform = '';
+                        this.style.boxShadow = '';
+                    }, 300);
+                    
+                    console.log(`Interest tracked: ${challengeName} - ${challengeTitle}`);
+                });
+                
+                // Track hover for engagement
+                challenge.addEventListener('mouseenter', function() {
+                    const challengeName = this.getAttribute('data-challenge');
+                    
+                    if (window.va) {
+                        window.va('track', 'Challenge Hover', {
+                            challenge: challengeName
+                        });
+                    }
+                });
+            });
+        });
     </script>
 </body>
 </html>
