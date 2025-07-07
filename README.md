@@ -1,4 +1,4 @@
-# 🧠 CloudWalk AI Jedi Challenges
+# 🧠 CloudWalk Nimbus Challenges
 
 > **Choose Your Mission. Master the Force of AI.**
 
@@ -10,7 +10,7 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 
 ### 🚀 Live Experience
 - **Interactive Interface**: Click any challenge to expand and explore details
-- **Analytics Tracking**: Monitor candidate interest and engagement
+- **Advanced Analytics**: Monitor candidate interest and engagement with simplified tracking
 - **Cyberpunk Aesthetics**: Matrix-inspired design with terminal interface
 - **Responsive Design**: Works seamlessly on desktop and mobile
 
@@ -36,7 +36,7 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 - **Frontend**: Pure HTML5, CSS3, JavaScript (ES6+)
 - **Styling**: Custom CSS with cyberpunk theme, Matrix rain effect
 - **Fonts**: Space Mono (monospace, terminal aesthetic)
-- **Analytics**: Dual system - GA4 + N8N Webhook for advanced automation
+- **Analytics**: Optimized N8N Webhook system for challenge click tracking
 - **Deployment**: Vercel with automatic GitHub integration
 - **Version Control**: Git with semantic commit messages
 
@@ -48,12 +48,12 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 - **Terminal Aesthetics**: Authentic cyberpunk terminal design
 - **Matrix Background**: Animated falling characters effect
 
-### 📊 Analytics & Tracking
-- **Challenge Interest**: Track which challenges candidates expand
-- **Engagement Metrics**: Monitor hover interactions and time spent
-- **Google Analytics 4**: Real-time tracking with custom events
-- **N8N Webhook**: Advanced automation and real-time processing
-- **Event Categories**: Separate tracking for expand, collapse, and hover events
+### 📊 Optimized Analytics & Tracking
+- **Focus on Intent**: Track only challenge clicks that show real interest
+- **Clean Data Structure**: Organized data for better analysis
+- **Google Analytics 4**: Basic page view tracking
+- **N8N Webhook**: Advanced automation for challenge interactions
+- **Simplified Events**: Only `challenge_click` and `page_view` events
 
 ### 🎯 User Experience
 - **Progressive Disclosure**: Show summaries first, details on demand
@@ -63,44 +63,52 @@ This project presents **9 progressive AI challenges** across 3 difficulty levels
 
 ## 🔗 N8N Webhook Analytics
 
-### 🎯 Sistema Avançado de Analytics
-O site possui integração com webhook N8N para automação e análise avançada:
+### 🎯 Sistema Simplificado e Eficiente
+O site possui integração otimizada com webhook N8N:
 
-- **Eventos Estruturados**: Dados JSON detalhados para cada interação
-- **Retry Automático**: Sistema de tentativas com fallback offline
-- **Session Tracking**: Acompanha comportamento por sessão
-- **Processamento em Tempo Real**: Automação instantânea no N8N
+- **Foco em Clicks**: Apenas eventos de click nos desafios são capturados
+- **Dados Estruturados**: JSON limpo com informações relevantes
+- **Retry Automático**: Sistema de tentativas para garantia de entrega
+- **Session Tracking**: Acompanha comportamento por sessão única
 
-### 📊 Tipos de Eventos Enviados
-- `page_view`: Visita à página
-- `challenge_expanded`: Challenge expandido (evento mais importante)
-- `challenge_hover`: Mouse sobre challenge
-- `challenge_time_spent`: Tempo gasto em challenge específico
-- `scroll_depth`: Profundidade de scroll (25%, 50%, 75%, 90%, 100%)
-- `time_on_page`: Marcos de tempo (30s, 60s, 2min, 5min)
-- `page_exit`: Saída da página com métricas finais
+### 📊 Eventos Rastreados
+- `challenge_click`: Click para expandir desafio (evento principal)
+- `page_view`: Visita à página (controle básico)
+
+**Estrutura do evento de click:**
+```json
+{
+  "event_type": "challenge_click",
+  "challenge_name": "cloudwalk-chatbot",
+  "challenge_title": "💬 CloudWalk Chatbot",
+  "challenge_level": "Level 1: Padawan – Light Side Missions",
+  "action": "expand",
+  "sessionId": "nimbus_1234567890_abc123",
+  "timestamp": "2025-01-05T15:30:00.000Z"
+}
+```
 
 ### ⚙️ Configuração Rápida
 1. **Configure URL do webhook** no `index.html`:
 ```javascript
 const WEBHOOK_CONFIG = {
-    url: 'https://sua-instancia-n8n.com/webhook/jedi-challenges',
+    url: 'https://cloudwalk-growth.app.n8n.cloud/webhook/973d5b3f-1952-42c2-8de7-671ae0906f24',
     enabled: true,
     retryAttempts: 3,
     retryDelay: 1000
 };
 ```
 
-2. **Importe o workflow** do arquivo `n8n-workflow-example.json`
+2. **Importe o workflow** do arquivo `n8n-nimbus-click-tracking.json`
 3. **Configure integrações** (Google Sheets, Slack, etc.)
 
 ### 🎯 Casos de Uso
-- **Lead Scoring**: Pontuação automática baseada em engagement
-- **Notificações em Tempo Real**: Alertas quando usuários interagem com challenges avançados
-- **Analytics Avançadas**: Integração com Google Sheets, CRM, etc.
-- **Automação de Marketing**: Triggers baseados em comportamento
+- **Análise de Interesse**: Identificar desafios mais atrativos
+- **Lead Scoring**: Pontuação baseada em engajamento real
+- **Otimização de Conteúdo**: Ajustar desafios baseado em dados
+- **Automação de Marketing**: Triggers baseados em interesse específico
 
-📋 **Documentação Completa**: Ver `N8N_WEBHOOK_SETUP.md`
+📋 **Documentação Completa**: Ver `N8N_WEBHOOK_SETUP.md` e `NIMBUS_PROJECT_CHANGES.md`
 
 ## 🚀 Quick Start
 
@@ -128,13 +136,19 @@ This project is automatically deployed to Vercel:
 ## 📁 Project Structure
 
 ```
-jedi-challenges/
-├── index.html                    # Main site with all challenges
-├── clouwalk-jedi-challeges.md   # Original challenge documentation
-├── N8N_WEBHOOK_SETUP.md         # N8N webhook configuration guide
-├── n8n-workflow-example.json    # Ready-to-import N8N workflow
-├── .gitignore                   # Git ignore patterns
-└── README.md                    # This file
+nimbus-challenges/
+├── index.html                         # Main site with all challenges
+├── cloudwalk-nimbus-challenges.md     # Challenge documentation
+├── nimbus-challenges-events.csv       # Analytics data export
+├── N8N_WEBHOOK_SETUP.md              # N8N webhook configuration guide
+├── n8n-nimbus-click-tracking.json    # Optimized N8N workflow
+├── n8n-workflow-example.json         # Legacy workflow (full events)
+├── NIMBUS_PROJECT_CHANGES.md         # Project transformation documentation
+├── DEPLOY_INSTRUCTIONS.md            # Deployment guide
+├── .gitignore                        # Git ignore patterns
+├── nimbus/                           # Additional resources
+│   └── nimbus-challenges/            # Backup/alternative version
+└── README.md                         # This file
 ```
 
 ### 🧹 Clean & Minimal
@@ -146,27 +160,26 @@ jedi-challenges/
 ## 📈 Analytics Dashboard
 
 ### 📊 Google Analytics 4
-Monitor candidate engagement through GA4:
+Monitor basic page visits:
 
 1. **Configure GA4 ID** in `index.html`
 2. **Access Dashboard**: Google Analytics 4 interface
-3. **Custom Events**: Track challenge interactions
-4. **Real-time Data**: Monitor live user behavior
+3. **Page Views**: Track basic site usage
 
 ### 🤖 N8N Automation
-Advanced analytics and automation:
+Advanced analytics focused on challenge interest:
 
-1. **Real-time Processing**: Events processed instantly
-2. **Custom Workflows**: Automated responses to user behavior
+1. **Real-time Processing**: Challenge clicks processed instantly
+2. **Custom Workflows**: Automated responses to specific interests
 3. **Integrations**: Google Sheets, Slack, CRM systems
-4. **Lead Scoring**: Automatic scoring based on engagement
+4. **Intent Scoring**: Focus on actual challenge exploration
 
 ### 📊 Key Metrics
-- **Most Popular Challenges**: Track expansion counts by challenge
+- **Most Popular Challenges**: Track click counts by challenge
 - **Difficulty Preference**: Compare engagement across levels
-- **User Journey**: Analyze hover → expand → collapse patterns
-- **Engagement Depth**: Time spent and scroll behavior
-- **Session Analytics**: Multi-visit behavior tracking
+- **Interest Patterns**: Which challenges attract most clicks
+- **Session Analytics**: Multi-challenge exploration behavior
+- **Conversion Funnel**: From page view to challenge exploration
 
 ## 🎨 Design Philosophy
 
@@ -192,17 +205,18 @@ Advanced analytics and automation:
 
 ### Modifying Analytics
 ```javascript
-// GA4 custom events
-gtag('event', 'custom_event', {
-    'challenge_name': challengeName,
-    'additional': data
+// GA4 page views
+gtag('event', 'page_view', {
+    'page_title': document.title,
+    'page_location': window.location.href
 });
 
-// N8N webhook events
+// N8N webhook events (challenge clicks only)
 sendEventToN8N({
-    event_type: 'custom_event',
+    event_type: 'challenge_click',
     challenge_name: challengeName,
-    additional: data
+    challenge_title: challengeTitle,
+    action: 'expand'
 });
 ```
 
@@ -210,12 +224,26 @@ sendEventToN8N({
 ```javascript
 // Update webhook configuration
 const WEBHOOK_CONFIG = {
-    url: 'https://your-n8n-instance.com/webhook/jedi-challenges',
+    url: 'https://cloudwalk-growth.app.n8n.cloud/webhook/973d5b3f-1952-42c2-8de7-671ae0906f24',
     enabled: true,
     retryAttempts: 3,
     retryDelay: 1000
 };
 ```
+
+## 📋 Recent Updates
+
+### 🎯 CloudWalk Nimbus Transformation
+- **Rebranded** from "CloudWalk AI Jedi Challenges" to "CloudWalk Nimbus Challenges"
+- **Simplified Analytics**: Focus on challenge clicks only
+- **Optimized Data Structure**: Clean, organized tracking
+- **Enhanced N8N Integration**: Streamlined workflow for better automation
+
+### 📊 Analytics Improvements
+- **Removed Noise**: No more hover, scroll, or time-based events
+- **Clean Data**: Structured columns instead of raw JSON dumps
+- **Focused Insights**: Track what matters - actual challenge interest
+- **Better Performance**: Fewer requests, faster processing
 
 ---
 

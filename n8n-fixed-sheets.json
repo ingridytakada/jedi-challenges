@@ -1,0 +1,89 @@
+{
+  "name": "Jedi Challenges → Fixed Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "973d5b3f-1952-42c2-8de7-671ae0906f24",
+        "responseMode": "onReceived",
+        "responseData": "{ \"status\": \"success\" }",
+        "options": {}
+      },
+      "id": "webhook",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrair e organizar dados do evento\nconst input = $input.first().json;\n\n// Dados sempre presentes\nconst cleanData = {\n  timestamp: input.timestamp || new Date().toISOString(),\n  event_type: input.event_type || 'unknown',\n  challenge_name: input.challenge_name || '',\n  challenge_title: input.challenge_title || '',\n  challenge_level: input.challenge_level || '',\n  user_engagement: input.user_engagement || '',\n  session_id: input.sessionId || '',\n  time_spent_seconds: input.time_spent_seconds || 0,\n  user_agent: input.userAgent || '',\n  url: input.url || '',\n  referrer: input.referrer || '',\n  interaction_type: input.interaction_type || '',\n  \n  // Dados específicos por tipo de evento\n  scroll_depth: input.scroll_depth || 0,\n  milestone: input.milestone || 0,\n  visibility_state: input.visibility_state || '',\n  is_visible: input.is_visible || '',\n  \n  // Metadados\n  processed_at: new Date().toISOString()\n};\n\n// Log para debug\nconsole.log('📊 Processando evento:', cleanData.event_type);\nif (cleanData.challenge_name) {\n  console.log('🎯 Challenge:', cleanData.challenge_name);\n  console.log('📈 Engagement:', cleanData.user_engagement);\n}\n\nreturn cleanData;"
+      },
+      "id": "process_data",
+      "name": "Process & Clean Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": "SEU_GOOGLE_SHEETS_ID",
+        "sheetName": "Challenge_Events",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.timestamp }}",
+            "event_type": "={{ $json.event_type }}",
+            "challenge_name": "={{ $json.challenge_name }}",
+            "challenge_title": "={{ $json.challenge_title }}",
+            "challenge_level": "={{ $json.challenge_level }}",
+            "user_engagement": "={{ $json.user_engagement }}",
+            "session_id": "={{ $json.session_id }}",
+            "time_spent_seconds": "={{ $json.time_spent_seconds }}",
+            "user_agent": "={{ $json.user_agent }}",
+            "url": "={{ $json.url }}",
+            "referrer": "={{ $json.referrer }}",
+            "interaction_type": "={{ $json.interaction_type }}",
+            "processed_at": "={{ $json.processed_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save_to_sheets",
+      "name": "Save to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [680, 300]
+    }
+  ],
+  "connections": {
+    "webhook": {
+      "main": [
+        [
+          {
+            "node": "process_data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "process_data": {
+      "main": [
+        [
+          {
+            "node": "save_to_sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+} 
