@@ -24,7 +24,8 @@ git push origin main
 ```
 
 ### Verificação do Deploy
-- URL do site: https://cloudwalk-jedi-challenges.vercel.app/
+- URL do site: https://cloudwalk-nimbus-challenges.vercel.app/
+- URL legacy: https://cloudwalk-jedi-challenges.vercel.app/ (para referência)
 - Verificar se o título mudou para "CloudWalk Nimbus Challenges"
 - Testar clicks nos desafios
 - Verificar logs no console do navegador
@@ -73,7 +74,7 @@ J: referrer
 ### Teste 1: Site Funcionando
 ```bash
 # Abrir site
-open https://cloudwalk-jedi-challenges.vercel.app/
+open https://cloudwalk-nimbus-challenges.vercel.app/
 
 # Verificar:
 # - Título mudou para "CloudWalk Nimbus Challenges"

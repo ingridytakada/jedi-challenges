@@ -130,7 +130,8 @@ npx serve .
 
 ### Deployment
 This project is automatically deployed to Vercel:
-- **Production**: https://cloudwalk-jedi-challenges.vercel.app/
+- **Production**: https://cloudwalk-nimbus-challenges.vercel.app/
+- **Legacy URL**: https://cloudwalk-jedi-challenges.vercel.app/ (will redirect)
 - **Auto-deploy**: Every push to `main` branch triggers deployment
 
 ## 📁 Project Structure
@@ -251,7 +252,7 @@ const WEBHOOK_CONFIG = {
 
 **🚀 Ready to accept a challenge?**
 
-**[Visit the Site →](https://cloudwalk-jedi-challenges.vercel.app/)**
+**[Visit the Site →](https://cloudwalk-nimbus-challenges.vercel.app/)**
 
 *May the source be with you!*
 
