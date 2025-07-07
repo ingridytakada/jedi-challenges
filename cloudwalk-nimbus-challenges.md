@@ -1,4 +1,4 @@
-# 🧠 CloudWalk AI Coding Challenges – Choose Your Mission
+# 🧠 CloudWalk Nimbus Challenges – Choose Your Mission
 
 Welcome to the **AI-Powered Coding Challenge Collection**. Below are several missions of increasing difficulty. Choose **only one** to implement. 
 
